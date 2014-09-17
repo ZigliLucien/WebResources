@@ -1,0 +1,82 @@
+#!/usr/bin/perl
+
+open(OUT1,">idx.html");
+open(OUT2,">index.html");
+
+print OUT1 '<html>
+<head>
+<title></title>
+</head>
+
+<body>
+<center>
+<h2> Contents </h2>
+
+';
+
+print OUT2 '<html>
+<head>
+<title></title>
+</head>
+
+<body>
+<center>
+<h2> Contents </h2>
+
+';
+
+while(<>){
+
+if(/<chapter>(.*)<\/chapter>/){
+
+	$y = $1;
+		$y =~ s/^\s+//; 
+		$y =~ s/\s+$//; 
+		$y=~s/_/ /g;
+		($cttl =$y)=~s/\s/_/g;
+
+
+print OUT1 '<a href="',"..$dir/$cttl",'">',$y,'</a>',"\n";
+print OUT1 '<p>',"\n";
+print OUT2 '<a href="',".$dir/$cttl",'">',$y,'</a>',"\n";
+print OUT2 '<p>',"\n";
+
+	if ($flag){
+	
+print '</outline>
+';
+	
+		close OUT;
+	}
+
+	$x=$cttl;
+	$x=~s/\'//g;
+
+	open OUT, ">$x.hxml";
+	select OUT;
+	$flag = 1;
+
+print '<?xml version="1.0"?>
+        <outline>
+';
+	print;
+	next;
+	}
+
+	print;
+}
+
+print OUT1 '
+</center>
+</body>
+</html>
+';
+
+print OUT2 '
+</center>
+</body>
+</html>
+';
+
+close OUT1;
+close OUT2;

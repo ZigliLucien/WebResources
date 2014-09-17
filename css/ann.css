@@ -1,0 +1,799 @@
+ 	/*
+	Designed by George Chavchanidze
+	http://rmi.acnet.ge/~gch/
+	mailto: sendnow@operamail.com
+	Language: CSS2, CSS2.1
+	Last modified on Tue, 12 Oct 2004
+	Latest version is available at
+	http://geocities.com/csssite/math.css
+	Annotated version is available at
+	http://geocities.com/csssite/ann.css
+	Sample XML documents are listed at
+	http://geocities.com/csssite/index.xml
+
+
+DESCRIPTION
+
+Main abilities and limitations 
+of present style sheet are described 
+in article
+	http://geocities.com/csssite/math.xml
+Current version can render subscripts, 
+superscripts (including nested and coupled subscripts and superscripts),
+fractions (including nested fractions), 
+vectors, matrices, under and over scripted operators 
+(almost anything including indexed sums, 
+products, direct sums and products,
+integrals, intersections, unifications), 
+generic under and over scripts, cases, 
+under and over braces, fences. 
+It defines formatting of basic structural 
+elements of article (title, abstract, headers, 
+paragraphs, theorems, statements, references 
+etc.) performs automated numbering 
+of equations, headers and references,
+specifies separate styling for screen, print 
+and projection media. 
+
+MARKUP 
+
+Style sheet is expected to be applied
+to XML MAIDEN 1.0 documents.
+XML MAIDEN (Manuscript Authoring, 
+Interchange and Delivery Environment)
+is simple XML based markup language 
+for short mathematical articles.
+DTD is available at 
+	http://xml.org/xml/schema/2227412c/xml.dtd
+Annotated DTD can be found at 
+	http://geocities.com/csssite/xml.txt
+
+STYLE SHEET STARTS HERE
+
+with DOCUMENT CANVAS description 
+	*/
+
+root /* element that envelopes whole document */
+	{display:block;
+	font-family:code2000, serif;
+	font-size:14pt;
+	line-height:1.5em;
+	text-align:justify;}
+	
+	/*
+	here root element stands for XML root element, 
+	you may notice that line height is slightly higher  
+	than normal, this is common practice for mathematical
+	articles and it ensures that subscripts and superscripts 
+	from adjacent lines don't overlap.
+	Style sheet uses rendering technique that does not 
+	essentially depend on font metrics so you can change
+	font-size and font-family as you wish, however please use 
+	unicode fonts that are scalable and have more or less good 
+	coverage of unicode ranges used in mathematical articles
+	(for instance mathematical operators range).
+	*/
+
+new /* new page, page break */, eqs /* equations*/,
+par /* paragraph, subparagraph, generic block level container */, 
+sec /* section, subsection */, 
+seg /* segment, generic block level container */, 
+set /* set of block level elements*/, 
+txt /* plain text, code */, h1 /* main header, title*/, 
+h2 /* header */, h3 /* subheader */, 
+h4 /* subsubheader*/ , ol /* ordered list*/, 
+ul /* unordered list*/
+	{display:block;}
+	/* Block level elements listed above capture basic structure of
+	mathematical article. 
+	Using attributes 'key' and 'spec' one can enrich 
+	general structure with semantics */
+
+root > par, root > seg, root > set,
+sec > par, sec > seg, sec > set
+	{margin:1ex 0;}
+	/* 1ex margin between paragraphs and paragraph-like block 
+	level elements 	is defined above*/
+txt
+	{font-family:monospace;
+	white-space:pre;
+	border:dotted 1px;
+	padding:1ex;
+	margin:1ex;}
+	/* Plain text container. May carry islands 
+	of code or markup samples 
+	Here line breaks are preserved and
+	fixed width font is used. */
+
+h1, h2, h3, h4
+	{font-size:1.4em;
+	font-weight:bold;
+	text-align:left;
+	margin:2mm 0;}
+	/* style of headers
+	is defined above */
+h2
+	{font-size:1.2em;}
+h2:before
+	{content:counter(header) ". ";
+	counter-increment:header;}
+h2#ack:before, h2#refs:before
+	{display:none;}
+	/* Automated numbering of headers is defined here.
+	Numbers 1. 2. 3. 4. are inserted before each header.
+	For roman numbering I II III IV
+	add rule content:counter(header, upper-roman) " ";
+	For alphabetic numbering A B C D
+	add rule content:counter(header, upper-alpha) " "; */
+h3, h4
+	{font-size:1.1em;}
+	/* sub headers are smaller */
+h1 + set
+	{margin:1em 10%;
+	font-size:0.8em;
+	line-height:1.2em;}
+h1 + set > seg
+	{margin:0.3ex 0;}
+h1 + set seg[key="Author"]
+	{font-size:1.2em;}
+	/* article hat usually follows main title
+	and contains information about article
+	(abstract, author, keywords etc.)*/
+li
+	{display:list-item;}
+	/* list items */
+ol, ul
+	{margin-left:2em;
+	text-align:left;}
+	/* left margin reserves space for
+	list markers */
+ol
+	{list-style-type:decimal;}
+	/* style of ordered lists is defined here */
+
+
+par[key]:before, seg[key]:before
+	{content:attr(key) ". ";
+	font-weight:bold;}
+	/* 'key' attribute that carries
+	basic semantical information often
+	can be used as inline caption */
+par[key="Axiom"], par[key="Exercise"], 
+par[key="Lemma"], par[key="Problem"],
+par[key="Theorem"]
+	{border:dashed 1px;
+	padding:1mm;}
+	/* style of exercises, problems,
+	lemmas, theorems and other statements
+	is defined above */
+par[key="Comment"], par[key="Remark"], par[key="Sample"], 
+par[key="Solution"], par[key="Proof"]
+	{border-bottom:dotted 1px;}
+	/* just to indicate end of solution, verification,
+	proof, comment etc.	*/
+seg[key="Author"]:before, seg[key="Authors"]:before,
+seg[key="Address"]:before
+	{display:none;}
+seg[key="Date"]:before, seg[key="Keywords"]:before, 
+seg[key="MSC 2000"]:before
+	{content:attr(key) ": ";}
+par[key="Theorem"]:before
+	{content: "Theorem " counter(theorem) ". ";
+	counter-increment:theorem;}
+par[key="Remark"]:before
+	{content: "Remark " counter(remark) ". ";
+	counter-increment:remark;}
+	/* Numbering of theorems and remarks
+	is defined here */
+tb
+	{display:table;}
+tc
+	{display:table-caption;}
+td, th, tn
+	{display:table-cell;}
+tl, tr
+	{display:table-row;}
+
+	/* formatting of tables is briefly defined above */
+
+br:before
+	{content:"\A";
+	white-space:pre;}
+	/* <br/> tag is used to generate 
+	line breaks, line feed character &#x0A; is inserted via
+	generated content
+	http://www.w3.org/TR/CSS21/generate.html
+	 */
+
+wr:before
+	{white-space:normal;
+	content:"\200B  "; /* just zero width space &#x200B; */}
+	/* <wr/> tag is used to mark places where browser is allowed generate 
+	line breaks (in areas where arbitrary automated line breaks are prohibited, 
+	for example in math equations) 
+	http://www.w3.org/TR/CSS21/text.html#white-space-prop
+	*/
+r wr, n wr
+	{display:none;}
+	/* Inside fractions and matrices 
+	<wr/> tag is ignored */
+b /* bold */, st /* stress */
+	{font-weight:bold;}
+i /* italic */, em /* emphasize */, hi /* highlight*/
+	{font-style:italic;}
+em em, em hi, em st, hi em, hi hi, hi st,
+st em, st hi, st st
+	{text-decoration:underline;}
+o /* overline */	
+	{text-decoration:overline;}
+s /* strike */	
+	{text-decoration:line-through;}
+u /* underline */
+	{text-decoration:underline;}
+
+
+e
+	{display:block;
+	margin:0.5ex 1.5em 0.5ex 12%;
+	line-height:2em;
+	text-align:left;}
+	/*
+	block level equations are indented
+	and have increased line height to
+	improve readability and suppress 
+	line height enlargement effect caused by
+	fractions and indexed expressions.
+	Right margin reserves space for labels.
+	*/
+e, m
+	{white-space:nowrap;} 
+	/*
+	automated line breaks inside math 
+	expressions are prohibited as browsers 
+	may generate them in inappropriate places.
+	One can still force  browser to break line using
+	<br/> tag (see above) or <wr/> tag that marks
+	wrap points where automated breaks are still allowed
+	*/
+e:before
+	{content:"(" counter(equation) ")";
+	counter-increment:equation;
+	display:block;
+	text-align:right;
+	margin:0 -1.5em -2em 0;}
+	/*
+ 	automated numbering of block level equation is defined here
+	Labels are moved to the right edge, their position is adjusted
+	using negative margins. In CSS2.1 one can float labels to the right
+	edge by setting float:right; but in CSS2 floated generated content 
+	is not allowed so we use negative margins instead.
+	*/
+f /* fraction */, c /* compact fraction*/, 
+ovr /* over scripted expression  */, 
+und /* under or underover scripted expression*/
+	{display:inline-table;
+	/* display:inline-block; */
+	/* CSS2.1 defines also inline blocks that 
+	provide functionality quite similar to inline tables.
+	Here we prefer to use inline-tables as they are allowed
+	in both CSS2 and CSS2.1 */
+	/* display:-moz-inline-box; 
+	-moz-box-orient:vertical;*/
+	/* Gecko based browsers has two long standing bugs
+	http://bugzilla.mozilla.org/show_bug.cgi?id=9458
+	http://bugzilla.mozilla.org/show_bug.cgi?id=18217
+	that spoil rendering of inline tables and inline blocks
+	in Gecko based browsers (Mozilla, Firefox, Camino, Netscape, DocZilla).
+	As a workaround one can use nonstandard CSS display property 
+	-moz-inline-box to make style sheet partly compatible with Gecko	*/
+	line-height:1.5em;
+	margin:0 2px;
+	text-align:center;
+	vertical-align:middle;}
+	/* Fractions and expressions with under or over scripts
+	are formatted as vertically centered inline tables 
+	http://www.w3.org/TR/CSS21/tables.html#q2
+	with horizonatally centered content */	
+
+r, d
+	{display:block;
+	line-height:1.7em;
+	max-height:1.7em;
+	white-space:nowrap;}
+	/* fraction row (numerator or denominator) 
+	is block level element,
+	maximal height is limited to ensure that 
+	possible over flow effects caused by 
+	nested indices or other elements does not
+	break vertical centering of fraction.
+	
+	Note that here one exploits anonymous table objects
+	http://www.w3.org/TR/CSS21/tables.html#anonymous-boxes
+	ensuring that markup
+
+		<inline-table>
+		<block>numerator</block>
+		<block>denominator</block>
+		</inline-table>
+
+	is treated as
+
+		<inline-table>
+		<table-row>
+		<table-cell>
+		<block>numerator</block>
+		<block>denominator</block>
+		</table-cell>
+		</table-row>
+		</inline-table>
+
+	P.S. markup is shown schematically, actual markup is
+
+		<f>
+		<r>numerator</r>
+		<r>denominator</r>
+		</f>
+
+	Note that instead inline tables one may use 
+	inline blocks
+
+		<inline-block>
+		<block>numerator</block>
+		<block>denominator</block>
+		</inline-block>
+	
+	*/
+
+d
+	{max-height:1.2em;
+	line-height:1.2em;
+	font-size:0.7em;}
+m d
+	{font-size:0.8em;}
+	/* height of rows in compact fractions 
+	 is reduced to ensure that fraction 
+	 fits well in parent element's line box */
+
+f r:first-child, d:first-child
+	{border-bottom: solid 1px;}
+	/* numerator has border that imitates
+	fraction bar */
+l, t
+	{font-size:0.7em;
+	position:relative;
+	top:0.9ex;}
+		/*
+	One can render lower indices by  either
+	specifying vertical alignment
+	like 
+	l {vertical-align:sub} 
+	(percentage and length values for vertical alignment 
+	also can be used)
+	or using relative positioning 
+	http://www.w3.org/TR/CSS21/visuren.html#relative-positioning
+	that is even better
+	since indices rendered using relative positioning 
+	do not cause line height enlargement and 
+	does not break vertical alignment 
+	of parent element (fraction, indexed operator)
+	*/
+d l
+	{top:0.5ex;}
+	/* offsets for indices that appear 
+	inside compact fractions are reduced */
+fen + l, fen + g > l
+	{top:1.6em;
+	padding-left:2px;}
+bra + l, bra + g > l
+	{top:1em;
+	padding-left:2px;}
+	/*
+	position of indices that follow brackets 
+	and fences is adjusted to match
+	size of fences.
+	*/
+t
+	{top:-1.2ex;}
+	/*
+	alternatively one can use
+	t {vertical-align:super}
+	*/
+d t
+	{top:-1ex;}
+	/* offsets for indices that appear 
+	inside compact fractions are reduced */
+fen + t, fen + g > t
+	{top:-2em;
+	padding-left:2px;}
+bra + t, bra + g > t
+	{top:-1.4em;
+	padding-left:2px;}
+	/*
+	position of indices that follow brackets 
+	and fences is adjusted to match
+	size of fences.
+	*/
+g
+	{display:inline-table;
+	vertical-align:middle;
+	text-align:left;
+	padding:1ex 0;}
+		/*
+	Double indices can be rendered in several ways
+
+	1. Subscript may precede superscript
+		T<l>ab</l><t>cd</t> 
+	2. Subscript may succeed superscript
+		T<t>cd</t><l>ab</l> 
+	3. Indices may be aligned one over another
+		For this purpose we have to use additional
+		element to join indices in single object 
+		and align them exactly one over other
+		T<g><l>ab</l><t>cd</t></g>
+	In third case they are enclosed in
+	inline table or inline block, vertically centered
+	and relatively shifted to baseline.
+	*/
+m g, r g
+	{padding:0.2ex;}
+g[role="pre"]
+	{text-align:right;}
+	/* prescripts are right aligned*/
+g > t, g > l
+	{display:block;
+	font-size:0.7em;
+	line-height:1em;
+	position:static;}
+co + g > t
+	{margin-bottom:0.5ex;}
+bra + g > t
+	{margin-bottom:1ex;}
+fen + g > t
+	{margin-bottom:1.5ex;}
+	/*
+	position of indices that follow brackets 
+	and fences is adjusted to match
+	size of fences.
+	*/
+	
+	/*
+	This part of style sheet deals with under and over
+	scripted expressions. Style sheet is applied to
+	the following markup
+		<ovr>
+		<x>over script</x>
+		<k>KERNEL EXPRESSION</k>
+		</ovr>
+	(overscripts)
+		<und>
+		<k>KERNEL EXPRESSION</k>
+		<x>under script</x>
+		</und>
+	(under script)
+		<und>
+		<x>over script</x>
+		<k>KERNEL EXPRESSION</k>
+		<x>under script</x>
+		</und>
+	(both over and under script)
+	*/
+k
+	{display:block;}
+ovr > k
+	{padding-bottom:0.7em;}
+	/* to restore vertical centering, broken by presence of
+	over script */
+und > k:first-child
+	{padding-top:0.7em;}
+	/* to restore vertical centering, broken by presence of
+	under script */
+k[brace="over"]:after, k[brace="under"]:before
+	{display:block;
+	content:"\A0";
+	max-height:6px;}
+	/* to restore vertical centering, broken by presence of
+	over or under brace */
+k[brace="over"]:before, k[brace="under"]:after
+	{display:block;
+	content:"\A0";
+	max-height:5px;
+	border-width:1px 1px 0 1px;
+	border-style:solid;}
+k[brace="under"]:after
+	{border-width:0 1px 1px 1px;}
+	/* if necessary over and under braces can be added before 
+	under scripts (after over scripts) 
+	Style sheet is applied to the following markup
+		<ovr>
+		<x>over brace script</x>
+		<k brace="over">KERNEL EXPRESSION</k>
+		</ovr>
+ or
+		<und>
+		<k brace="under">KERNEL EXPRESSION</k>
+		<x>under brace script</x>
+		</und>
+	*/
+
+x
+	{display:block;
+	font-size:0.7em;
+	line-height:1em;}
+	/* under and over scripts are 
+	smaller than ordinary text */
+und co[re]
+	{display:block;
+	font-size:1.75em;
+	line-height:1.1em;
+	top:0;}
+	/* resizable operators are enlarged */
+und co[re]:first-child
+	{padding-top:0.4em;}
+	/* to restore vertical centering, broken by presence of
+	under script */
+co[re]
+	{font-size:1.75em;
+	position:relative;
+	top:0.4ex;}
+	/* resizable operators are enlarged */
+co[re]:before
+	{content:attr(re);}
+	/* Resizable operators are inserted via 
+	generated content.  They are specified 
+	by attribute because in this way one
+	can control rendering of individual 
+	operators via style sheet (they can be
+	targeted using attribute selectors) */
+m co[re]
+	{top:0.2ex;}
+r co[re]
+	{top:0.1ex;}
+m co[re], r co[re]
+	{font-size:1.2em;}
+	/* resizable operators are enlarged */
+	
+	/*
+	VECTORS, MATRICES 
+	Rendering of matrices and vectors is 
+	defined in this part of style sheet. 
+	Matrices are structured row by row 
+	since such data order is more convenient 
+	for rendering with CSS.
+
+Style sheet is applied to markup
+
+	<det>
+	<r2>
+	<n>a</n>
+	<n>b</n>
+	</r2>
+	<r2>
+	<n>c</n>
+	<n>d</n>
+	</r2>
+	</det>
+(determinants)
+	<mat>
+	<r3>
+	<n>a</n>
+	<n>b</n>
+	<n>c</n>
+	</r3>
+	<r3>
+	<n>d</n>
+	<n>e</n>
+	<n>f</n>
+	</r3>
+	<r3>
+	<n>g</n>
+	<n>h</n>
+	<n>i</n>
+	</r3>
+	</mat>
+(matrices)
+	<vec>
+	<n>a</n>
+	<n>b</n>
+	<n>c</n>
+	</vec>
+(vectors)
+	<val>
+	<r2>
+	<n>1</n>
+	<n>0</n>
+	</r2>
+	<r2>
+	<n>{if n < m}</n>
+	<n>{if n > m}</n>
+	</r2>
+	</val>
+multivalued functions
+	*/
+
+det, mat, vec, val
+	{display:inline-table;
+	border-collapse:collapse;
+	vertical-align:middle;
+	text-align:center;}
+	/* 	matrices, determinants, vectors 
+	and multi values are formatted as inline tables 
+	Border are collapsed to create 'hooks'
+	effect that imitates square braces in
+	matrices and vectors 
+	(effect is produced by inserting extra
+	cells via generated content and removing
+	inner borders using CSS border conflict 
+	resolution mechanism)
+	*/
+det > *, mat > *, vec > n, val > r2
+	{display:table-row;}
+det n, mat n, val n
+	{display:table-cell;
+	line-height:1.7em;
+	white-space:nowrap;
+	padding:0 8px;}
+mat > *:before, mat > *:after,
+vec > n:before, vec > n:after
+	{display:table-cell;
+	content:"\A0";
+	border-bottom:solid 1px;
+	border-left:solid 1px;
+	border-top:hidden;}
+mat > *:after, vec > n:after
+	{border-left:none;
+	border-right:solid 1px;}
+mat > *:first-child:before, mat > *:first-child:after, 
+vec > n:first-child:before, vec > n:first-child:after
+	{border-top:solid 1px;}
+	/*
+	in matrices and vectors this extra cells,
+	inserted via generated content,
+	form left and right braces.
+	Note that border-top:hidden removes all inner borders
+	and leaves only outer one.
+	http://www.w3.org/TR/CSS21/tables.html#collapsing-borders
+	*/
+det
+	{border-left:solid 1px;
+	border-right:solid 1px;}
+val
+	{border:dashed 1px gray;}
+val n
+	{text-align:right;}
+val n + n
+	{text-align:left;}
+
+fen:before, fen:after,
+bra:before, bra:after
+	{content:"";
+	border-style:solid;
+	border-width:1px 0 1px 1px;
+	padding:1.4ex 2px;}
+	/* Formatting of large brackets
+	and fences is defined here. They are
+	immitated using generated content and 
+	borders  */
+bra:before, bra:after
+	{padding:0.6ex 2px;}
+fen:after, bra:after
+	{border-width:1px 1px 1px 0;}
+fen[ce~="|"]:before, fen[ce~="|"]:after,
+bra[ce~="|"]:before, bra[ce~="|"]:after
+	{border-width:0 1px 0 0;}
+fen[ce="|"]:before, bra[ce="|"]:before
+	{display:none;}
+fen[ce~="|"]:before, bra[ce~="|"]:before
+	{border-width:0 0 0 1px;}
+fen[ce~="||"]:before, fen[ce~="||"]:after,
+bra[ce~="||"]:before, bra[ce~="||"]:after
+	{border-width:0 3px 0 0;
+	border-style:double;}
+fen[ce~="||"]:before, bra[ce~="||"]:before
+	{border-width:0 0 0 3px;}
+fen[ce~="("]:before, bra[ce~="("]:before
+	{border-width:1px 0 1px 2px;}
+fen[ce~=")"]:after, bra[ce~=")"]:after
+	{border-width:1px 2px 1px 0;}
+fen[ce~="["]:before, bra[ce~="["]:before
+	{border-width:1px 0 1px 1px;}
+fen[ce~="]"]:after, bra[ce~="]"]:after
+	{border-width:1px 1px 1px 0;}
+fen[ce~="{"]:before, bra[ce~="{"]:before
+	{border-left-style:dashed;
+	border-width:1px 0 1px 1px;}
+fen[ce~="}"]:after, bra[ce~="}"]:after
+	{border-right-style:dashed;
+	border-width:1px 1px 1px 0;}
+	/*
+	Below is alternative approach where
+	large brackets are glued from Unicode
+	characters 239B-23AD inserted in inline 
+	blocks via generated content
+	*/
+	/*
+fen[ce="( )"]:before, fen[ce="( )"]:after, 
+fen[ce="{ }"]:before, fen[ce="{ }"]:after, 
+fen[ce="[ ]"]:before, fen[ce="[ ]"]:after
+	{display:inline-block;
+	vertical-align:middle;
+	font-size:0.8em;
+	line-height:1em;
+	padding:0.5em 0;
+	white-space:pre;}
+fen[ce="{ }"]:before
+	{content:"\23A7 \A \23A8 \A \23A9";}
+fen[ce="{ }"]:after
+	{content:"\23AB \A \23AC \A \23AD";}
+fen[ce="( )"]:before
+	{content:"\239B \A \239C \A \239D";}
+fen[ce="( )"]:after
+	{content:"\239E \A \239F \A \23A0";}
+fen[ce="[ ]"]:before
+	{content:"\23A1 \A \23A2 \A \23A3";}
+fen[ce="[ ]"]:after
+	{content:"\23A4 \A \23A5 \A \23A6";}
+	*/
+
+	/*
+	MEDIA QUERIES
+	
+	Style declarations for screen, projection
+	and print media are specified here.
+	*/
+
+@media screen
+		{
+a, e, hi, li, m
+	{color:navy;}
+h1, h2, h3, h4, par[key]:before, seg[key]:before
+	{color:maroon;}
+root
+	{background-color:silver;
+	padding:1ex;}
+		}
+@media print
+		{
+e, par[key="Theorem"]
+	{page-break-inside:avoid;}
+new
+	{page-break-before:always;}
+root
+	{background-color:white;}
+		}
+	/*
+	Projection is expected to be used for
+	conference presentations and slide shows.
+	In Opera browser you have to press F11
+	to enter projection mode (so called "Opera Show").
+	See http://www.opera.com/support/tutorials/operashow/
+	for details.
+	*/
+
+@media projection
+		{
+par, set
+	{page-break-after:always;
+	padding:1em;}
+h1
+	{font-size:1.7em;}
+h2
+	{font-size:1.5em;}
+h3
+	{font-size:1.3em;}
+h4
+	{font-size:1.1em;}
+h1 + set
+	{font-size:1.2em;}
+a, e, hi, li, m
+	{color:navy;}
+h1, h2, h3, h4, par[key]:before, seg[key]:before
+	{color:maroon;}
+e:hover, m:hover
+	{background-color:white;}
+root
+	{font-size:16pt;
+	background-color:#eeeeee;
+	padding:0.5ex;}
+		}
+		
+	/*	END OF STYLE SHEET	*/

@@ -1,0 +1,192 @@
+#!/usr/bin/perl
+
+use DBI;
+
+$flag = 1;
+$titleflag = 0;
+
+while(<>){
+
+chomp;
+
+if(/chapter:/){
+		@line = split(/:/,$_);
+		$line[1] =~ s/^\s+//; 
+		$line[1] =~ s/\s+$//; 
+		($currentitle =$line[1])=~s/\s/_/g;
+		($titl =$currentitle)=~s/_/ /g;
+
+		mkdir "$currentitle" if(not -d "$currentitle");
+		chdir "$currentitle";
+
+		open OUT1, ">$currentitle.txml";
+###		if(not -l "contents.html"){system("ln -s $currentitle.html contents.txml");}
+
+	$openingflag = 0;
+
+
+$dsn = "dbi:mysql:database=texdb";
+
+$dbh = DBI->connect($dsn,'tex','x');
+
+		$sql = "SHOW TABLES FROM texdb";
+		$sth = $dbh->prepare($sql);
+		$sth->execute;
+	
+		$exists = 0;
+
+	while (@row = $sth->fetchrow_array) { 
+		if($row[0] eq $currentitle) {
+			$exists = 1;
+			break;
+		}	
+	}
+
+     
+
+ if(not $exists){
+                   $sql = 
+		"CREATE TABLE IF NOT EXISTS ".$currentitle."(filename varchar(255) NOT NULL,
+		time bigint NOT NULL,
+		data mediumblob NOT NULL,
+		links text,
+		PRIMARY KEY (filename))";
+	           $sth = $dbh->prepare($sql);
+	           $sth->execute or die("Cannot create table");
+	$openingflag = 1;
+	}
+
+
+
+
+print OUT1
+"<html><head>
+<style> a,h2{margin-left:12%}</style>
+<title>$currentitle</title></head>
+";
+
+if($openingflag){
+print OUT1
+"<body>
+<h1>$currentitle</h1>
+<br/><p/><br/>
+";
+}
+
+$sql = "SELECT data FROM $currentitle WHERE filename=?";
+
+	           $sth = $dbh->prepare($sql);
+
+$name = $currentitle."/".$currentitle;
+
+$sth->execute("$name") || 
+	print "Could not execute SQL statement for $name --- maybe invalid?";
+
+$buffer = "";
+
+while (@row=$sth->fetchrow_array)
+  { $buffer .= "@row\n"; }
+
+	$out = $buffer;
+
+	print OUT1 $out;
+
+	$sth->finish;
+	$dbh->disconnect;
+
+	print OUT1 "
+		 \n<!-- L**NKS -->\n
+ 		\n<div id='tabz'>\n";
+		next;
+	}
+
+if(/title:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	$heading = $line[1];
+	$titleflag = 1;
+	next;
+	}
+
+if(/filename:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	($ttle = $line[1])=~s/\s/_/g;
+	$pass = (-e "$ttle.txml");
+	print STDOUT "\nPASSING $ttle\n" if $pass;
+if(not $pass){	
+	print STDOUT "\nOPENING $ttle\n";
+	open OUT, ">$ttle.txml";
+	select OUT ;                               
+	$heading = $line[1] if not $titleflag; 
+
+print
+"<html><head>
+<title>$ttle</title></head>
+<body>
+<h2> $heading </h2>
+<p/><br/><p/>
+";
+}									 
+	$titleflag = 0;    
+	next;
+	}
+
+if($flag and (/next:/ or /last:/) ){
+	print "\n<p/>\n";
+	print "\n<!-- L**NKS -->\n";
+	print "\n<div id='tabz'>\n";
+	$flag = 0;
+	}
+
+if(/next:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	($ttl = $line[1])=~s/\s/_/g; 
+	next if (not length($ttl));
+	#print 
+	#"<a class='reflink' href=\"$ttl.txml\"> $line[1] </a>
+	#";
+	next;
+	}
+          
+if(/last:/){
+	$flag = 1;
+if(/ c@nt@nts/){ 
+	#print 
+		#"\n\n<a class='reflink' href=\"contents.html\"> Contents </a>
+		#";
+
+                           ($ttlout = $ttle)=~s/_/ /g;
+
+  	   #print OUT1
+	   #"<a class='reflink' href=\"$ttle.txml\"> $ttlout </a>
+	   #";
+#	print OUT1
+#	"<a href=\"$ttle.txml\"> $ttlout </a><p/>
+#	";
+	} else {
+
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	($ttl = $line[1])=~s/\s/_/g;
+	#print 
+	#"<a class='reflink' href=\"$ttl.txml\"> $line[1] </a>
+	#";
+#	print OUT1 
+#	"<a class='reflink' href=\"$ttl.txml\"> $line[1] </a>
+#	";
+	}
+		print "</div>\n</body>\n</html>\n";
+		close OUT if(not $pass);
+	print "CHECKING $pass\n";
+     }
+	
+}
+
+	print OUT1 "</div>\n</body>\n</html>\n";
+	close OUT1;

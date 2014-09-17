@@ -1,0 +1,2 @@
+xsltproc -o $1.txt sitebuilder.xsl $1.hxml
+xsltproc -o list.html makecontentsOutline.xsl $1.hxml

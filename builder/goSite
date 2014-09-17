@@ -1,0 +1,3 @@
+./sitestarter $1
+./siteformatter $1.txt
+./sitelinker $1.txt

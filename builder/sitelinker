@@ -1,0 +1,166 @@
+#!/usr/bin/perl
+
+use DBI;
+
+$flag = 1;
+$titleflag = 0;
+
+while(<>){
+
+chomp;
+
+if(/chapter:/){
+		@line = split(/:/,$_);
+		$line[1] =~ s/^\s+//; 
+		$line[1] =~ s/\s+$//; 
+		($currentitle =$line[1])=~s/\s/_/g;
+		mkdir "$currentitle" if(not -d "$currentitle");
+		chdir "$currentitle";
+		$db = $currentitle;
+		
+
+$dsn = 
+"dbi:mysql:database=texdb";
+
+$dbh = DBI->connect($dsn,'tex','x');
+
+		$sql = "SHOW TABLES FROM texdb";
+		$sth = $dbh->prepare($sql);
+		$sth->execute;
+	
+		$exists = 0;
+
+	while (@row = $sth->fetchrow_array) { 
+		if($row[0] eq $currentitle) {
+			$exists = 1;
+			break;
+		}	
+	}
+
+     
+ if(not $exists){
+                   $sql = 
+		"CREATE TABLE IF NOT EXISTS ".$currentitle."(filename varchar(255) NOT NULL,
+		time bigint NOT NULL,
+		data mediumblob NOT NULL,
+		links text,
+		PRIMARY KEY (filename))";
+	           $sth = $dbh->prepare($sql);
+	           $sth->execute or die("Cannot create table");
+	}
+		next;
+	}
+
+if(/title:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	($heading = $line[1])=~s/\s/_/g;
+	$titleflag = 1;
+	next;
+	}
+
+if(/filename:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	($ttle = $line[1])=~s/\s/_/g;
+	$name = "$currentitle/$ttle";
+
+	$linkflag = 0;
+print STDOUT "\nGOING FOR $name\n";     
+if($exists){
+	
+	$sql = "SELECT filename FROM $currentitle WHERE filename=?";
+	           $sth = $dbh->prepare($sql);
+	            $sth->execute($name);
+
+	while (@row=$sth->fetchrow_array){ $reslt = "@row\n";}
+	   $sth->finish;
+	  $linkflag=1 if($reslt); 
+	    print  STDOUT "READING $reslt\n";
+       }
+
+	$links = "";
+            $heading = $ttle if(not $titleflag); 						 
+	$titleflag = 0;    
+	next;
+	}
+
+if($flag and (/next:/ or /last:/)){
+	$links.= "\n<p/>\n";
+	$links.="\n<!-- L**NKS -->\n";
+	$links.= "\n<div id='tabz'>\n";
+	$flag = 0;
+	}
+
+if(/next:/){
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	$x = $line[1];
+	($ttl = $line[1])=~s/\s/_/g; 
+	next if (not length($ttl));
+	$links.=
+	"<a class='reflink' href=\"$ttl.txml\"> $x </a>
+	";
+	next;
+	}
+          
+if(/last:/){
+	$flag = 1;
+if(/ c@nt@nts/){ print STDOUT "Chapter: ",$ttle,"\n";
+		#$links .=
+		#"\n\n<a class='reflink' href=\"contents.html\"> Contents </a>
+		#";
+                           ($ttlout = $ttle)=~s/_/ /g;
+
+	} else {
+
+	@line = split(/:/,$_);
+	$line[1] =~ s/^\s+//; 
+	$line[1] =~ s/\s+$//; 
+	$x = $line[1];
+	($ttl = $line[1])=~s/\s/_/g;
+		$links.=
+		"<a class='reflink' href=\"$ttl.txml\"> $x </a>
+		";
+	}
+	$links.= "</div>\n";
+$sql = "INSERT INTO ".$db." (filename, links) ".
+		"VALUES(?, ?)".
+		" ON DUPLICATE KEY UPDATE links=VALUES(links)";
+
+	           $sth = $dbh->prepare($sql);
+	           $sth->execute($name,$links) || 
+           die "Could not execute SQL statement.";
+	}
+}
+
+# @ls = <*.txml>;
+
+#	for(@ls){
+#		if(/_/){
+#			($newtitle = $_)=~s/_/ /g;
+#			symlink($_,$newtitle);
+#		}
+#	}
+
+   symlink("../idx.html","nav.html");
+   system("cp ../list.html .");
+   symlink("../outline.html","index.html");
+#   symlink("$currentitle.txml","idx.txml");
+
+open (OT,">idx.txml");
+select OT;
+
+print OT
+"<html>
+<head><title></title></head>
+<body>
+<meta http-equiv='refresh' content=\'0:$currentitle.txml\'/>
+</body>
+</html>
+";
+ close OT;
+

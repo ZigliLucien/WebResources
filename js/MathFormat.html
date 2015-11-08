@@ -1,0 +1,54 @@
+<html>
+<head>
+<style>td{text-align:center}</style>
+<title>Math Formatting Tags</title>
+</head>
+
+<body>
+
+<h2>Math Formatting</h2>
+
+<table align='center' width="80%" border='1' cellspacing='0'>
+<tr><th>Tag</th><th>Attributes</th><th>Remarks</th><th>CSS</th></tr>
+<tr>	<td>section</td><td>id|name</td><td>name optional</td><td>block, indented</td></tr>
+<tr>	<td>subsection</td><td>id|name</td><td>name optional</td><td>block, indented</td></tr>
+<tr>	<td>subsubsection</td><td>id|name</td><td>name optional</td><td>block, indented</td></tr>
+<tr>	<td>paragraph</td><td>id|name</td><td>name optional</td><td>block, indented</td></tr>
+<tr>	<td>subparagraph</td><td>id|name</td><td>name optional</td><td>block, indented</td></tr>
+
+<tr>	<td>theorem</td><td>id|name</td><td>attributes optional</td><td>italic, darkblue</td></tr>
+<tr>	<td>proposition</td><td>id|name</td><td>attributes optional</td><td>italic, green in js file</td></tr>
+<tr>	<td>lemma</td><td>id|name</td><td>attributes optional</td><td>italic, green in js file</td></tr>
+<tr>	<td>corollary</td><td>id|name</td><td>attributes optional</td><td>italic, green in js file</td></tr>
+<tr>	<td>remark</td><td>id|name</td><td>attributes optional</td><td><br/></td></tr>
+<tr>	<td>example</td><td>id|name</td><td>attributes optional</td><td><br/></td></tr>
+          
+<tr>	<td>proof</td><td><br/></td><td><br/><td><br/></td></td></tr>
+
+<tr>	<td>equation</td><td>num</td><td>display numbered with 'num'</td><td>block, gray</td></tr>
+<tr>	<td>eq</td><td><br/></td><td>display</td><td>block, gray</td></tr>
+
+<tr>	<td>skip	</td><td><br/></td><td>empty content, p-br-p</td><td><br/></td></tr>
+
+<tr>	<td>quad	</td><td><br/></td><td>empty content, triple nbsp</td><td><br/></td></tr>
+<tr>	<td>qquad	</td><td><br/></td><td>empty content, quintuple nbsp</td><td><br/></td></tr>
+
+<tr>	<td>cr</td><td><br/></td><td>empty content, same as br</td><td><br/></td></tr>
+
+<tr>	<td>ref	</td><td>name</td><td>content specifies the link</td><td><br/></td></tr>
+<tr>	<td>labelref</td><td>name</td><td>the name is also the link</td><td><br/></td></tr>
+<tr>	<td>def	</td><td><br/></td><td><br/></td><td>darkblue</td></tr>
+
+<tr>	<td>enumerate	</td><td><br/></td><td>same as &lt;ol>&lt;/ol></td><td><br/></td></tr>
+<tr>	<td>description</td><td><br/></td><td>same as &lt;dl>&lt;/dl></td><td><br/></td></tr>
+<tr>	<td>itemize	</td><td><br/></td><td>same as &lt;ul>&lt;/ul></td><td><br/></td></tr>
+<tr>	<td>item</td><td><br/></td><td>same as &lt;li>&lt;/li></td><td><br/></td></tr>
+</table>
+<p/><br/><p/>
+<div style='margin-left:25%;margin-right:35%'>
+For the h1 through h6 tags, font weights and colors are specified in the math.css file. 
+The id attributes of 'section' through 'subparagraph' become content for corresponding
+h2 through h6 tags with weights and colors accordingly.
+</div>
+</body>
+</html>

@@ -12,13 +12,12 @@ function gtname(x){
 
 function clearsubdashes(x){
 	         var a = new RegExp(String.fromCharCode(95),'g');
-                        x = x.replace(a, String.fromCharCode(32));
+                              x = x.replace(a, String.fromCharCode(32));
 	          return x;
 }
 
 jQuery(document).ready( 
-	function(){
-
+	function(){ 
 	jQuery('.proposition').css('color','#006500');
 	jQuery('.lemma').css('color','#006500');
 	jQuery('.corollary').css('color','#006500');
@@ -64,8 +63,8 @@ jQuery(document).ready(
 	jQuery('.proof').before('&#xa0;<br/><i>Proof</i>&#xa0;');
 
 	jQuery('.equation').each( function(){jQuery(this)
-	.before('&#xa0;<br/>'+gtname(jQuery(this).attr('name')))
-	.append('<num class="eqno">('+jQuery(this).attr('name')+')</num>')});
+	.before('&#xa0;<br/>'+gtname(jQuery(this).attr('num')))
+	.append('<num class="eqno">('+jQuery(this).attr('num')+')</num>')});
 
 	jQuery('.eq').before('&#xa0;<br/>');
 
@@ -123,8 +122,8 @@ jQuery(document).ready(
 	jQuery('proof').before('&#xa0;<br/><i>Proof</i>&#xa0;');
 
 	jQuery('equation').each( function(){jQuery(this)
-	.before('&#xa0;<br/>'+gtname(jQuery(this).attr('name')))
-	.append('<num class="eqno">('+jQuery(this).attr('name')+')</num>')});
+	.before('&#xa0;<br/>'+gtname(jQuery(this).attr('num')))
+	.append('<num class="eqno">('+jQuery(this).attr('num')+')</num>')});
 
 	jQuery('eq').before('&#xa0;<br/>');
 
@@ -138,6 +137,17 @@ jQuery(document).ready(
 	jQuery('labelref').each( function(){jQuery(this)
 	.replaceWith("<a href=\"#"+jQuery(this).attr('name')+"\">"+jQuery(this).attr('name')+"</a>")});
 
+	var y = jQuery("a.reflink:last").text();
+	if(y.indexOf("Contents")>0){
+	jQuery("a.reflink:last").prepend("&#xa0;&#xa0;").append("&#x21ba;");
+	} else {		
+		jQuery("a.reflink:last").prepend("&#xa0;&#xa0;").append("&#x21aa;");	
+	}	
+	jQuery("a.reflink").not(':last').prepend("&#xbb;");	
+
+	jQuery("li.page_item").not(".current_page_parent").prepend("&#xa0;&#xa0;").css('font-size','90%');	
+	jQuery("li.current_page_parent").prepend("&#xa0;&#x21b0;&#xa0;").css('font-size','111%');	
+	jQuery('#tabs').wrap('<p/><br/><p/>');
        });	
 
 

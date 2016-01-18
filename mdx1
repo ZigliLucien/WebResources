@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+use Cwd;
+
+$ddir = getcwd();
+(@x,$dir)=split(/\//,$ddir);
+
+open(OUT,">index.html");
+
+select OUT;
+
+print '<html>
+<head>
+<title></title>
+</head>
+
+<body>
+<center>
+<h2> Contents </h2>
+
+';
+
+@list = `ls -F|grep /`;
+
+
+for (@list){
+
+chomp;
+
+$_=~s/\///;
+($x=$_)=~s/_/ /g;
+
+print '<a href="',".$dir/$_",'">',$x,'</a>',"\n";
+print '<p>',"\n";
+
+}
+
+print '
+</center>
+</body>
+</html>
+';
+
+close OUT;

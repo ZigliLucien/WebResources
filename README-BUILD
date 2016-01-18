@@ -1,0 +1,8 @@
+make txml file from tex file using TextoItex
+add xml header and strip to <html></html> enclosing tags
+run extract.xsl on txml file to get an xml file
+run makeHxml on the xml file to get an hxml file
+run goSite on the hxml file to generate the site
+
+
+

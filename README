@@ -1,0 +1,9 @@
+start with an *.hxml file
+then run sitestarter to produce *.txt
+then siteformatter to produce .txml files that are the basic pages for the site
+
+goSite <name>
+
+will accomplish the required steps
+
+

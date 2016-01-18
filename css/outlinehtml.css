@@ -60,7 +60,7 @@
 
 	div.menu a:visited{color: #888888}
 	div.menu a:hover{ color: #cc9908; text-decoration: underline}
-	div.menu a { color: #00d; font-family: sans-serif;font-size: 80%}
+	div.menu a { color: #00d; font-family: sans-serif}
 	#chapter a{color: #000099;font-style: normal; font-family: Roman;font-weight: normal;}
 
 	#menuleft{

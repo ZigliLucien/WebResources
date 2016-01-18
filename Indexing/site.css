@@ -1,0 +1,38 @@
+	ul{list-style-type: none}
+	img{padding-right: 1.3em;margin-left: -1em}
+
+	body{width:75%;background:#f4f4f4}
+
+	div.menu a{font-size: 110%}
+	div.menu a:visited{color: #888888}
+	 div.menu a:hover{ color: #cc9908; text-decoration: underline}
+	 div.menu li{padding-right:1.5em}
+
+	 div.list1 a:link{color: #4444ff}
+	 div.list1 a:visited{color: #8888ee}
+	 div.list1 a:hover{ color: #cc9908;text-decoration:underline}
+	 div.list1 li{background-color:#eea;padding-right:1.5em}
+	 div.list1 h2{padding-right:1.5em;padding-bottom:0.5em;font-size: 150%;font-weight:lighter}
+
+	 div.list2 a:link{color: #4444ff}
+	 div.list2 a:visited{color: #8888ee}
+	 div.list2 a:hover{ color: #cc9908;text-decoration:underline}
+	 div.list2 li{background-color:#eea;padding-right:1.5em}
+	 div.list2 h2{padding-right:1.5em;padding-bottom:0.5em;font-size: 150%;font-weight:lighter}
+
+	#dirs{padding-bottom:1em;float:left; margin-left: 8%;
+		position:absolute;top:7em;background-color:#effdff;border-radius: 1em;border:4px solid #efecef}/*width: 35%;*/
+	#files{padding-bottom:1em;margin-left:45%;background-color:#eea;border-radius: 1em;border: 3px solid #dda;}
+		 /*position:relative;top:7em;width: 20%;*/
+
+	div.list1{position:absolute;right: 65%;width:27%;padding:1em}
+	div.list2{float:right;margin-right:15%}
+
+	#footer{position:relative;
+	width:18%;text-align:center;margin-left:50%;margin-top:-2%;background-color:#fafafa}
+
+	.list h2{padding: .25em .25em .5em;}
+	.menu h2{padding: 0em .5em .25em;font-size: 170%;font-weight:lighter}
+
+	h1{margin-left:.5em;padding: .3em .3em 1em ;font-size:220%;font-weight:lighter}
+	item{background-color:white}

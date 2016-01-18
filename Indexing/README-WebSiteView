@@ -1,0 +1,12 @@
+WebIndex : like WebSiteView with relative paths. Directories consecutive.
+USE THIS FOR THE BLOG-STYLE SITE.
+
+SiteView: like WebSiteView with absolute paths. Directory table.
+
+WebSiteView: for relative references. Works: give full directory paths.
+             Directory table.
+
+SiteIndex: like WebSiteView with absolute paths. Directories listed
+           consecutively.
+
+WebView: like WebSiteView with dates. Directory table.

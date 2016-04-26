@@ -89,13 +89,14 @@ jQuery(document).ready(
 		.wrap('<blockquote></blockquote>')});	
 	}
 
+/*
 	var hd = new Array("h1","h2","h3","h4","h5","h6");
 	for(k=0;k<hd.length;k++){
 		jQuery(hd[k]).each( function(){var y = jQuery(this).html();
-		jQuery(this).html(clearsubdashes(y));
+		jQuery(this).html("XX "+clearsubdashes(y));
 		})	
 	}
-
+*/
 	  jQuery('enumerate').each( function(){jQuery(this)
 	.wrap('<ol></ol>')});
 	

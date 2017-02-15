@@ -10,10 +10,6 @@ if(/\<head\>/){
 	next;
 }
 
-if(/\<title\>/){
-	print;
-	next;
-}
 
 if(/\<\/head\>/ and $flag){
 
@@ -31,8 +27,6 @@ print
 ";
 next;
 
-}else{
-	$flag=0;
 }
 
 print;

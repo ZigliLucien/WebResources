@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+$out =  `./markdown -f latex -f nostyle $ENV{PATH_TRANSLATED} | ./mathjaxfilterr`;
+
+print "Content-type: text/html\n\n";
+
+print "$out";
+
+
+
+
+
